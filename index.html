@@ -3,12 +3,112 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Redirecionando…</title>
-  <link rel="canonical" href="https://gravatar.com/oiiluca">
-  <meta http-equiv="refresh" content="0; url=https://gravatar.com/oiiluca">
-  <script>location.replace("https://gravatar.com/oiiluca");</script>
+  <title>oiLuca</title>
+  <meta name="description" content="oiLuca — Content Creator">
+  <meta property="og:title" content="oiLuca">
+  <meta property="og:description" content="Content Creator">
+  <meta property="og:image" content="https://1.gravatar.com/avatar/fcb81e4d9c195c470ed4ef180f72303df69c99674ff156e608973f6a5d15d217?s=512">
+  <link rel="icon" href="img/avatar.png">
+  <style>
+    :root {
+      --bg: #43197a;
+      --surface: rgba(14, 0, 37, 0.72);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.72);
+      --line: rgba(255, 255, 255, 0.14);
+      --btn: rgba(255, 255, 255, 0.08);
+      --btn-hover: rgba(255, 255, 255, 0.16);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      background: var(--bg) url("img/bg.png") center / cover fixed no-repeat;
+      display: flex; justify-content: center; align-items: flex-start;
+      padding: 48px 16px;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background: var(--bg); opacity: 0.39; pointer-events: none;
+    }
+    .card {
+      position: relative; width: 100%; max-width: 440px;
+      background: var(--surface);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+    .header {
+      height: 140px;
+      background: url("img/header.png") center / cover no-repeat, #2a0d52;
+    }
+    .body { padding: 0 24px 28px; text-align: center; }
+    .avatar {
+      width: 112px; height: 112px; border-radius: 50%;
+      border: 4px solid #0e0025; margin-top: -56px; background: #0e0025;
+      object-fit: cover;
+    }
+    h1 { margin: 12px 0 2px; font-size: 1.7rem; letter-spacing: -0.01em; }
+    .meta { color: var(--muted); font-size: 0.95rem; margin: 0; }
+    .bio { margin: 14px 0 22px; font-size: 1.05rem; line-height: 1.5; }
+    .links { display: flex; flex-direction: column; gap: 10px; }
+    .links a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 16px; border-radius: 12px;
+      background: var(--btn); border: 1px solid var(--line);
+      color: var(--text); text-decoration: none; font-weight: 600;
+      transition: background .15s, transform .15s;
+    }
+    .links a:hover, .links a:focus-visible { background: var(--btn-hover); transform: translateY(-1px); }
+    .links img { width: 22px; height: 22px; }
+    .links span.label { flex: 1; text-align: left; }
+    .links span.arrow { opacity: .6; }
+    footer { margin-top: 22px; font-size: 0.8rem; }
+    footer a { color: var(--muted); }
+  </style>
 </head>
 <body>
-  <p>Redirecionando para <a href="https://gravatar.com/oiiluca">gravatar.com/oiiluca</a>…</p>
+  <main class="card">
+    <div class="header" id="header"></div>
+    <div class="body">
+      <img class="avatar" id="avatar" alt="Foto de oiLuca"
+           src="img/avatar.png">
+      <h1 id="name">oiLuca</h1>
+      <p class="meta" id="meta">Content Creator · he/him</p>
+      <p class="bio" id="bio">la ele</p>
+      <nav class="links" id="links">
+        <a href="https://twitch.tv/oiiluca" target="_blank" rel="noopener"><img src="img/twitch.svg" alt=""><span class="label">Twitch</span><span class="arrow">↗</span></a>
+        <a href="https://x.com/oiLuuca" target="_blank" rel="noopener"><img src="img/x.svg" alt=""><span class="label">X</span><span class="arrow">↗</span></a>
+        <a href="https://www.youtube.com/channel/UCBp9PxkcpIhdn2ndLnJ51Gg" target="_blank" rel="noopener"><img src="img/youtube.svg" alt=""><span class="label">YouTube</span><span class="arrow">↗</span></a>
+      </nav>
+      <footer><a href="https://gravatar.com/oiiluca" target="_blank" rel="noopener">Ver no Gravatar</a></footer>
+    </div>
+  </main>
+
+  <script>
+    // Atualiza com os dados mais recentes do Gravatar (o conteúdo acima é o fallback).
+    fetch("https://api.gravatar.com/v3/profiles/oiiluca")
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(p => {
+        const $ = id => document.getElementById(id);
+        if (p.display_name) { $("name").textContent = p.display_name; document.title = p.display_name; }
+        $("meta").textContent = [p.job_title, p.company, p.pronouns, p.location].filter(Boolean).join(" · ");
+        $("bio").textContent = p.description || "";
+        const accts = (p.verified_accounts || []).filter(a => !a.is_hidden);
+        if (accts.length) {
+          const nav = $("links"); nav.textContent = "";
+          for (const a of accts) {
+            const link = document.createElement("a");
+            link.href = a.url; link.target = "_blank"; link.rel = "noopener";
+            const img = document.createElement("img"); img.src = "img/" + (a.service_type === "twitter" ? "x" : a.service_type) + ".svg"; img.onerror = () => { img.src = a.service_icon; }; img.alt = "";
+            const label = document.createElement("span"); label.className = "label"; label.textContent = a.service_label;
+            const arrow = document.createElement("span"); arrow.className = "arrow"; arrow.textContent = "↗";
+            link.append(img, label, arrow); nav.append(link);
+          }
+        }
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>
